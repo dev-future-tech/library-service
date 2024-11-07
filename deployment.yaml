@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: library-service
+spec:
+  selector:
+    matchLabels:
+      name: library-service
+  template:
+    metadata:
+      labels:
+        name: library-service
+    spec:
+      containers:
+        - name: library-service
+          image: anthonyikeda/library-service:1.0-SNAPSHOT
+          env:
+            - name: BOOK_SERVICE_URL
+              value: http://book-service:8090
+            - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+              value: http://lgtm:4318/v1/logs
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: http://lgtm:4318/v1/traces
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://lgtm:4318
+            - name: OTEL_RESOURCE_ATTRIBUTES_DEPLOYMENT_ENVIRONMENT
+              value: docker
+            - name: OTEL_RESOURCE_ATTRIBUTES_SERVICE_NAME
+              value: book-service
+            - name: OTEL_RESOURCE_ATTRIBUTES_SERVICE_NAMESPACE
+              value: library

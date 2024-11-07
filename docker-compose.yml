@@ -1,0 +1,22 @@
+services:
+  book-service:
+    image: book-service:0.0.1-SNAPSHOT
+    networks:
+      - observability
+    environment:
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://otel:4318/v1/logs
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel:4318/v1/traces
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel:4318
+      OTEL_RESOURCE_ATTRIBUTES_DEPLOYMENT_ENVIRONMENT: docker
+      OTEL_RESOURCE_ATTRIBUTES_SERVICE_NAME: book-service
+      OTEL_RESOURCE_ATTRIBUTES_SERVICE_NAMESPACE: library
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/library_db
+      MANAGEMENT_ENDPOINT_CONFIGPROPS_ENABLED: true
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: configprops
+
+    ports:
+      - 8090:8090
+networks:
+  observability:
+    name: my-net
+    external: true
